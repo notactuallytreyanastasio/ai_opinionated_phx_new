@@ -28,7 +28,8 @@ shift
 PHX_OPTS="${*:-}"
 
 # Derive CamelCase module name from snake_case app name
-APP_MODULE=$(echo "$APP_NAME" | sed -E 's/(^|_)([a-z])/\U\2/g')
+# Use perl instead of sed — macOS sed doesn't support \U for uppercase
+APP_MODULE=$(echo "$APP_NAME" | perl -pe 's/(^|_)(.)/uc($2)/ge')
 
 echo "==> Creating Phoenix project: $APP_NAME (module: $APP_MODULE)"
 echo ""

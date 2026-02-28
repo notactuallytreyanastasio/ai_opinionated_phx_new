@@ -36,10 +36,11 @@ graph: ## Start the decision graph viewer (GRAPH_PORT=3001 make graph)
 # --- Database ---
 
 setup: ## Create database and run migrations (first-time setup)
-	docker compose exec app /app/bin/__APP_NAME__ eval "__APP_NAME_MODULE__.Release.setup()"
+	docker compose exec app mix ecto.create
+	docker compose exec app mix ecto.migrate
 
 migrate: ## Run pending migrations
-	docker compose exec app /app/bin/__APP_NAME__ eval "__APP_NAME_MODULE__.Release.migrate()"
+	docker compose exec app mix ecto.migrate
 
 backup: ## Backup the database to backups/
 	@mkdir -p backups
@@ -49,7 +50,7 @@ backup: ## Backup the database to backups/
 # --- Shell access ---
 
 iex: ## Open an IEx shell on the running app container
-	docker compose exec app /app/bin/__APP_NAME__ remote
+	docker compose exec app iex -S mix
 
 shell: ## Open a bash shell inside the app container
 	docker compose exec app /bin/bash
